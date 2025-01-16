@@ -1,3 +1,4 @@
+# Source code repo workflow:
 name: Trigger UI Tests
 
 on:
@@ -17,5 +18,13 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-           ${{ secrets.TEST_REPO }} \
-            -d '{"event_type":"app-code-changed","client_payload":{"ref":"${{ github.ref }}"}}'
+            ${{ secrets.TEST_REPO }} \
+            -d '{
+              "event_type":"app-code-changed",
+              "client_payload":{
+                "ref":"${{ github.ref }}",
+                "sha":"${{ github.event.pull_request.head.sha }}",
+                "repo":"${{ github.repository }}",
+                "pr_number":"${{ github.event.pull_request.number }}"
+              }
+            }'
